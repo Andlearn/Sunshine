@@ -6,6 +6,6 @@
     android:id="@+id/list_item_forecast_textview"
     android:minHeight="?android:attr/listPreferredItemHeight"
     android:gravity="center_vertical"
-    tools:text="This message only appears in preview">
+    tools:text="This message only appears in preview.">
 
 </TextView>
