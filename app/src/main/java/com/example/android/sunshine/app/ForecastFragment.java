@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -29,6 +32,13 @@ public class ForecastFragment extends Fragment {
     ArrayAdapter<String> mForecastAdapter;
 
     public ForecastFragment() {
+    }
+
+    @Override
+    public void onCreate (Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setHasOptionsMenu(true); //Indicates that this fragment contributes to the menu and so calls "onCreateOptionsMenu"
     }
 
     @Override
@@ -58,6 +68,30 @@ public class ForecastFragment extends Fragment {
         forecastListView.setAdapter(mForecastAdapter);
 
         return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.forecastfragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_refresh:
+                //Do refresh action
+                FetchWeatherTask fetchWeather = new FetchWeatherTask();
+                //fetchWeather.doInBackground(); //My try
+                fetchWeather.execute();
+                return true;
+            case R.id.action_settings:
+                //do Settings action
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public class FetchWeatherTask extends AsyncTask<Void, Void, Void> {
@@ -131,7 +165,6 @@ public class ForecastFragment extends Fragment {
 
             return null;
         }
-
     }
 }
 
