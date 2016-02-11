@@ -114,7 +114,7 @@ public class ForecastFragment extends Fragment {
 
                 //URL baseUrl = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q=amman&mode=json&units=metric&cnt=7&appid=27c1b2812dbdd3d6af077bcf927eaaab");
 
-                String baseUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7";
+                String baseUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?q=amman&mode=json&units=metric&cnt=7";
                 String apiKey = "&APPID=" + BuildConfig.OPEN_WEATHER_MAP_API_KEY;
                 URL url = new URL(baseUrl.concat(apiKey));
 
@@ -145,6 +145,9 @@ public class ForecastFragment extends Fragment {
                     return null;
                 }
                 forecastJsonStr = buffer.toString();
+
+                Log.v(LOG_TAG, "Forecast JSON String: " + forecastJsonStr);
+
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
                 // If the code didn't successfully get the weather data, there's no point in attempting
