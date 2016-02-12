@@ -1,5 +1,6 @@
 package com.example.android.sunshine.app;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -84,7 +85,7 @@ public class ForecastFragment extends Fragment {
                 //Do refresh action
                 FetchWeatherTask fetchWeather = new FetchWeatherTask();
                 //fetchWeather.doInBackground(); //My try
-                fetchWeather.execute();
+                fetchWeather.execute("amman");
                 return true;
             case R.id.action_settings:
                 //do Settings action
@@ -94,11 +95,15 @@ public class ForecastFragment extends Fragment {
         }
     }
 
-    public class FetchWeatherTask extends AsyncTask<Void, Void, Void> {
+    public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
         @Override
-        protected Void doInBackground(Void... prams) {
+        protected Void doInBackground(String... prams) {
+
+            if (prams.length == 0) {
+                return null;
+            }
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
@@ -114,10 +119,39 @@ public class ForecastFragment extends Fragment {
 
                 //URL baseUrl = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q=amman&mode=json&units=metric&cnt=7&appid=27c1b2812dbdd3d6af077bcf927eaaab");
 
-                String baseUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?q=amman&mode=json&units=metric&cnt=7";
-                String apiKey = "&APPID=" + BuildConfig.OPEN_WEATHER_MAP_API_KEY;
-                URL url = new URL(baseUrl.concat(apiKey));
+                //String baseUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?q=amman&mode=json&units=metric&cnt=7";
+                //String apiKey = "&APPID=" + BuildConfig.OPEN_WEATHER_MAP_API_KEY;
+                //URL url = new URL(baseUrl.concat(apiKey));
 
+                /*Making the URL for weather forecast using URI builder*/
+                //Query parameters variables
+                String format = "json";
+                String units = "metric";
+                int numDays = 7;
+
+                //Defining constants for parameters names:
+                final String QUERY_PARAM = "q";
+                final String FORMAT_PARAM = "mode";
+                final String UNITS_PARAM = "units";
+                final String DAYS_PARAM = "cnt";
+                final String APPID_PARAM = "APPID";
+
+                Uri.Builder uriBuilder = new Uri.Builder();
+                uriBuilder.scheme("http")
+                        .authority("api.openweathermap.org")
+                        .appendPath("data")
+                        .appendPath("2.5")
+                        .appendPath("forecast")
+                        .appendPath("daily")
+                        .appendQueryParameter(QUERY_PARAM, prams[0])
+                        .appendQueryParameter(FORMAT_PARAM, format)
+                        .appendQueryParameter(UNITS_PARAM, units)
+                        .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
+                        .appendQueryParameter(APPID_PARAM, BuildConfig.OPEN_WEATHER_MAP_API_KEY);
+
+                URL url = new URL(uriBuilder.build().toString());
+
+                Log.v(LOG_TAG, "Built URI: " + uriBuilder.build().toString());
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
@@ -153,7 +187,7 @@ public class ForecastFragment extends Fragment {
                 // If the code didn't successfully get the weather data, there's no point in attempting
                 // to parse it.
                 return null;
-            } finally{
+            } finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect();
                 }
