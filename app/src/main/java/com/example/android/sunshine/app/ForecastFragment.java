@@ -1,5 +1,6 @@
 package com.example.android.sunshine.app;
 
+import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,8 +13,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -73,6 +76,18 @@ public class ForecastFragment extends Fragment {
 
         ListView forecastListView = (ListView)rootView.findViewById(R.id.listview_forecast);
         forecastListView.setAdapter(mForecastAdapter);
+        forecastListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                Context context = getActivity();//.getApplicationContext();
+                CharSequence text = (String)adapterView.getItemAtPosition(position);
+                CharSequence text1 = mForecastAdapter.getItem(position); //This is used in the lesson
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(context, text, duration);
+                toast.show();
+            }
+        });
 
         return rootView;
     }
@@ -118,7 +133,7 @@ public class ForecastFragment extends Fragment {
             // Will contain the raw JSON response as a string.
             String forecastJsonStr = null;
 
-            String[] forecastArray;
+            String[] forecastArray = null;
 
             try {
                 // Construct the URL for the OpenWeatherMap query
@@ -159,7 +174,6 @@ public class ForecastFragment extends Fragment {
 
                 URL url = new URL(uriBuilder.build().toString());
 
-                Log.v(LOG_TAG, "Built URI: " + uriBuilder.build().toString());
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
@@ -188,7 +202,6 @@ public class ForecastFragment extends Fragment {
                 }
 
                 forecastJsonStr = buffer.toString();
-                Log.v(LOG_TAG, "Forecast JSON String: " + forecastJsonStr);
 
                 try {
                     forecastArray = getWeatherDataFromJson(forecastJsonStr, 7);
@@ -214,7 +227,17 @@ public class ForecastFragment extends Fragment {
                 }
             }
 
-            return null;
+            return forecastArray;
+        }
+
+        @Override
+        protected void onPostExecute(String[] result) {
+            if (result != null) {
+                mForecastAdapter.clear();
+                for (String dayForecastStr : result) {
+                    mForecastAdapter.add(dayForecastStr);
+                }
+            }
         }
 
         /* The date/time conversion code is going to be moved outside the asynctask later,
@@ -309,9 +332,9 @@ public class ForecastFragment extends Fragment {
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
             }
 
-            for (String s : resultStrs) {
-                Log.v(LOG_TAG, "Forecast entry: " + s);
-            }
+//            for (String s : resultStrs) {
+//                Log.v(LOG_TAG, "Forecast entry: " + s);
+//            }
             return resultStrs;
         }
     }
