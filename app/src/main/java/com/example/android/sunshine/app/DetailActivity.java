@@ -28,7 +28,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class DetailActivity extends ActionBarActivity {
-    Intent callingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +38,6 @@ public class DetailActivity extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
-        callingIntent = getIntent();
     }
 
 
@@ -78,9 +76,9 @@ public class DetailActivity extends ActionBarActivity {
                                  Bundle savedInstanceState) {
 
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-            String message = rootView.getContext().callingIntent.getStringExtra(Intent.EXTRA_TEXT);
-            TextView mainText = (TextView) rootView.findViewById(R.id.mainText);
-            mainText.setText(message);
+            String message = getActivity().getIntent().getStringExtra(Intent.EXTRA_TEXT);
+            ((TextView) rootView.findViewById(R.id.mainText)).setText(message);
+
             return rootView;
         }
     }
