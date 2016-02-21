@@ -114,9 +114,6 @@ public class ForecastFragment extends Fragment {
                 //fetchWeather.doInBackground(); //My try
                 fetchWeather.execute("amman");
                 return true;
-            case R.id.action_settings:
-                //do Settings action
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
