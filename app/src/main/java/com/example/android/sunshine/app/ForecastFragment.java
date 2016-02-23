@@ -2,9 +2,11 @@ package com.example.android.sunshine.app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.format.Time;
 import android.util.Log;
@@ -111,8 +113,11 @@ public class ForecastFragment extends Fragment {
             case R.id.action_refresh:
                 //Do refresh action
                 FetchWeatherTask fetchWeather = new FetchWeatherTask();
-                //fetchWeather.doInBackground(); //My try
-                fetchWeather.execute("amman");
+                //fetchWeather.execute("amman");
+                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                String locationCity = sharedPref.getString(getString(R.string.pref_location_key),getString(R.string.pref_location_key));
+                Toast.makeText(getActivity(), locationCity, Toast.LENGTH_SHORT).show();
+                fetchWeather.execute(locationCity);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
