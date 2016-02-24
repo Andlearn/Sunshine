@@ -24,4 +24,20 @@
 
     <!-- Default postal code for units preference [CHAR LIMIT=NONE] -->
     <string name="pref_units_default" translatable="false">Metric</string>
+
+    <string-array
+        name="pref_units_entries">
+        <item
+            >"Metric"</item>
+        <item
+            >"Imperial"</item>
+    </string-array>
+
+    <string-array
+        name="pref_units_values">
+        <item
+            >"Metric"</item>
+        <item
+            >"Imperial"</item>
+    </string-array>
 </resources>

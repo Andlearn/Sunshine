@@ -33,8 +33,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -59,23 +57,11 @@ public class ForecastFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        // Create some dummy data for the ListView.  Here's a sample weekly forecast
-        String[] data = {
-                "Mon 6/23 - Sunny - 31/17",
-                "Tue 6/24 - Foggy - 21/8",
-                "Wed 6/25 - Cloudy - 22/17",
-                "Thurs 6/26 - Rainy - 18/11",
-                "Fri 6/27 - Foggy - 21/10",
-                "Sat 6/28 - TRAPPED IN WEATHERSTATION - 23/18",
-                "Sun 6/29 - Sunny - 20/7"
-        };
-        List<String> weekForecast = new ArrayList<>(Arrays.asList(data));
-
         mForecastAdapter = new ArrayAdapter<>(
                 getActivity(), // The current context (this activity)
                 R.layout.list_item_forecast, // ID of list item layout
                 R.id.list_item_forecast_textview, // The ID of the textview to populate.
-                weekForecast);
+                new ArrayList<String>());
 
         ListView forecastListView = (ListView)rootView.findViewById(R.id.listview_forecast);
         forecastListView.setAdapter(mForecastAdapter);
@@ -84,13 +70,13 @@ public class ForecastFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 //Make message appear as a toast
                 Context context = getActivity();//.getApplicationContext();
-                CharSequence text = (String)adapterView.getItemAtPosition(position);
+                CharSequence text = (String) adapterView.getItemAtPosition(position);
                 CharSequence text1 = mForecastAdapter.getItem(position); //This is used in the lesson
                 int duration = Toast.LENGTH_SHORT;
                 Toast toast = Toast.makeText(context, text, duration);
                 toast.show();
 
-                String forecast = (String)adapterView.getItemAtPosition(position);
+                String forecast = (String) adapterView.getItemAtPosition(position);
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
                 intent.putExtra(Intent.EXTRA_TEXT, forecast);
                 startActivity(intent);
@@ -112,16 +98,26 @@ public class ForecastFragment extends Fragment {
         switch (id) {
             case R.id.action_refresh:
                 //Do refresh action
-                FetchWeatherTask fetchWeather = new FetchWeatherTask();
-                //fetchWeather.execute("amman");
-                SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                String locationCity = sharedPref.getString(getString(R.string.pref_location_key),getString(R.string.pref_location_key));
-                Toast.makeText(getActivity(), locationCity, Toast.LENGTH_SHORT).show();
-                fetchWeather.execute(locationCity);
+                updateWeather();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateWeather();
+    }
+
+    private void updateWeather() {
+        FetchWeatherTask fetchWeather = new FetchWeatherTask();
+        //fetchWeather.execute("amman");
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String locationCity = sharedPref.getString(getString(R.string.pref_location_key),getString(R.string.pref_location_key));
+        Toast.makeText(getActivity(), locationCity, Toast.LENGTH_SHORT).show();
+        fetchWeather.execute(locationCity);
     }
 
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
