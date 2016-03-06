@@ -36,7 +36,7 @@ import java.util.ArrayList;
 
 
 /**
- * A placeholder fragment containing a simple view.
+ * Fragment for showing weather forecast
  */
 public class ForecastFragment extends Fragment {
 
