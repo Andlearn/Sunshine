@@ -1,6 +1,0 @@
-Summary file for summarizing the steps to creating individual items making the project:
-
-*Activities and Fragments:
-
-*Adding OptionsMenu to:
-    -Activity:
