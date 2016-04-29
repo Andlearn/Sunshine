@@ -37,23 +37,29 @@ public class MainActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            //Create Intent for Settings to start it's activity
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
             startActivity(settingsIntent);
             return true;
         }
         if (id == R.id.action_map) {
+            //Open preferred location in a map app activity
             openPreferredLocationInMap();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    //Function for opening the preferred location specified
+    //in Settings in a new Activity of a map (geo) app
     public void openPreferredLocationInMap() {
+        //Get preferred location from SharedPreferences / settings
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String location = sharedPref.getString(
-                getString(R.string.pref_location_key),
-                getString(R.string.pref_location_default));
+                getString(R.string.pref_location_key),  //Get the value stored in this key
+                getString(R.string.pref_location_default));     //Return this default value if value doesn't exist
 
+        //Making Uri for geo location intent
         Uri geoLocation = Uri.parse("geo:0,0?").buildUpon()
                 .appendQueryParameter("q", location)
                 .build();
