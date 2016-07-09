@@ -12,7 +12,7 @@ import android.view.MenuItem;
 
 
 public class MainActivity extends ActionBarActivity {
-    private final String LOG_TAG = MainActivity.class.getSimpleName();
+    private final String LOG_TAG = MainActivity.class.getSimpleName(); //Simple class name string is used as log tag
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +39,7 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             //Create Intent for Settings to start it's activity
             Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            //Start the setting activity
             startActivity(settingsIntent);
             return true;
         }

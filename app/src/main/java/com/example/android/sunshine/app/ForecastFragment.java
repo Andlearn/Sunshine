@@ -40,6 +40,7 @@ import java.util.ArrayList;
  */
 public class ForecastFragment extends Fragment {
 
+    //Array adapter created as class object for forecast items View in fragment
     ArrayAdapter<String> mForecastAdapter;
 
     public ForecastFragment() {
@@ -55,8 +56,10 @@ public class ForecastFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //Create a View when inflating the fragment laout for future referencing
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
+        //Creating the Array Adapter for the forecast
         mForecastAdapter = new ArrayAdapter<>(
                 getActivity(), // The current context (this activity)
                 R.layout.list_item_forecast, // ID of list item layout
